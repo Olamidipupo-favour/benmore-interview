@@ -2,7 +2,7 @@ from django.db import models
 from django.contrib.auth.models import User
 
 class Task(models.Model):
-    assigned_to = models.ForeignKey(User, on_delete=models.CASCADE)
+    assigned_to = models.ForeignKey(User, on_delete=models.CASCADE, null=True, blank=True)
     title = models.CharField(max_length=255)
     description = models.TextField()
     priority = models.CharField(max_length=50, choices=[('Low', 'Low'), ('Medium', 'Medium'), ('High', 'High')])

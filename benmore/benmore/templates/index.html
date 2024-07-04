@@ -518,29 +518,33 @@
 <div id="taskModal" class="modal hidden fixed z-10 inset-0 overflow-y-auto">
   <div class="flex items-center justify-center min-h-screen">
     <div class="modal-content bg-white rounded-lg shadow-lg p-6 relative w-full max-w-lg">
-      <span class="close-modal absolute top-3 right-3 cursor-pointer text-gray-500">&times;</span>
+      <button class="close-modal absolute top-3 right-3 cursor-pointer text-gray-500">&times;</button>
       <h2 class="text-lg font-bold mb-4" id="modalTitle">Add Task</h2>
       <form id="taskForm">
         <input type="hidden" id="taskId">
         <div class="mb-4">
           <label for="taskPriority" class="block text-gray-700 text-sm font-bold mb-2">Priority:</label>
-          <select id="taskPriority" class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline">
+          <select id="taskPriority" name='priority' class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline">
             <option value="high">High</option>
             <option value="medium">Medium</option>
             <option value="low">Low</option>
           </select>
         </div>
         <div class="mb-4">
-          <label for="taskTime" class="block text-gray-700 text-sm font-bold mb-2">Time:</label>
-          <input type="text" id="taskTime" class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline">
+          <label for="taskTime" class="block text-gray-700 text-sm font-bold mb-2">Due Date:</label>
+          <input type="datetime-local" id="taskTime" class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline">
         </div>
         <div class="mb-4">
           <label for="taskType" class="block text-gray-700 text-sm font-bold mb-2">Type:</label>
-          <input type="text" id="taskType" class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline">
+          <input type="text" id="taskType" name="type" class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline">
+        </div>
+         <div class="mb-4">
+          <label for="taskTitle" class="block text-gray-700 text-sm font-bold mb-2">Title:</label>
+          <input id="taskTitle" class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" name="title"/>
         </div>
         <div class="mb-4">
           <label for="taskDescription" class="block text-gray-700 text-sm font-bold mb-2">Description:</label>
-          <textarea id="taskDescription" class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"></textarea>
+          <textarea id="taskDescription" class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" name="description"></textarea>
         </div>
         <div class="flex justify-end">
           <button type="button" id="saveTask" class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline">Save</button>
@@ -807,11 +811,16 @@
     // Function to handle form submission
     function handleFormSubmit(event) {
         event.preventDefault();
+        const accessToken = localStorage.getItem('access');
+        const refreshToken = localStorage.getItem('refresh');
         const taskId = $('#taskModal input[name="id"]').val();
         const url = taskId ? `/api/tasks/${taskId}/` : '/api/tasks/';
         const method = taskId ? 'PUT' : 'POST';
         const taskData = {
             title: $('#taskModal input[name="title"]').val(),
+            priority: $('#taskModal input[name="priority"]').val(),
+            category: $('#taskModal input[name="type"]').val(),
+            status: "In Progress",
             description: $('#taskModal textarea[name="description"]').val(),
             due_date: $('#taskModal input[name="due_date"]').val(),
         };
@@ -820,12 +829,13 @@
             url: url,
             method: method,
             headers: {
-                'X-CSRFToken': getCSRFToken(),
+                'X-CSRFToken': getCookie('csrftoken'),
+                'Authorization': `Bearer ${accessToken}`,
             },
             contentType: 'application/json',
             data: JSON.stringify(taskData),
             success: function(response) {
-                $('#taskModal').modal('hide');
+                $('#taskModal').hide();
                 // Refresh tasks
                 renderTasks()
             },
@@ -865,6 +875,9 @@
         showModal('Add Task');
     });
 
+    $('.close-modal').click(function() {
+      $('#taskModal').hide();
+    })
     // Edit task button click
     $('#taskList').on('click', '.edit-task', function() {
         const taskId = $(this).closest('.task-item').data('id');
@@ -890,6 +903,7 @@
 
     // Form submission
     $('#taskForm').submit(handleFormSubmit);
+    $('#saveTask').click(handleFormSubmit);
 });
     </script>
 </html>

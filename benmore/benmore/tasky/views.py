@@ -1,19 +1,15 @@
-from django.contrib.auth.models import Group, User
 from rest_framework import permissions, viewsets, generics
+from django.contrib.auth.models import Group, User
 from django.shortcuts import render
 from benmore.tasky.serializers import GroupSerializer, UserSerializer, TaskSerializer
-#from benmore.tasky.models import Task
 from tasky.models import Task
 from django_filters.rest_framework import DjangoFilterBackend
 from benmore.tasky.filter import TaskFilter
-from rest_framework.authtoken.models import Token
 from rest_framework.response import Response
 from rest_framework.views import APIView
-from rest_framework.authentication import TokenAuthentication
-from django.contrib.auth import authenticate
 from rest_framework import status
 from .serializers import RegisterSerializer
-
+from rest_framework.permissions import IsAuthenticated
 
 class IsOwnerOrReadOnly(permissions.BasePermission):
     """
@@ -26,8 +22,9 @@ class IsOwnerOrReadOnly(permissions.BasePermission):
         if request.method in permissions.SAFE_METHODS:
             return True
 
-        # Write permissions are only allowed to the owner of the snippet.
-        return obj.owner == request.user
+        # Write permissions are only allowed to the owner of the object.
+        return obj.assigned_to == request.user
+
 class UserViewSet(viewsets.ModelViewSet):
     """
     API endpoint that allows users to be viewed or edited.
@@ -46,13 +43,14 @@ class GroupViewSet(viewsets.ModelViewSet):
     permission_classes = [permissions.IsAuthenticated]
 
 def index(request):
-     return render(request, "index.html")
+    return render(request, "index.html")
 
 def login(request):
-     return render(request, "login.html")
+    return render(request, "login.html")
 
 def register(request):
-     return render(request, "signup.html")
+    return render(request, "signup.html")
+
 class TaskViewSet(viewsets.ModelViewSet):
     """
     This ViewSet automatically provides `list`, `create`, `retrieve`,
@@ -65,6 +63,12 @@ class TaskViewSet(viewsets.ModelViewSet):
     permission_classes = [permissions.IsAuthenticatedOrReadOnly, IsOwnerOrReadOnly]
     filter_backends = [DjangoFilterBackend]
     filterset_class = TaskFilter
+
+    def perform_create(self, serializer):
+        serializer.save(assigned_to=self.request.user)
+
+    def perform_update(self, serializer):
+        serializer.save(assigned_to=self.request.user)
 
 class RegisterView(generics.CreateAPIView):
     serializer_class = RegisterSerializer
