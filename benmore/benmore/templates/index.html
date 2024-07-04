@@ -145,7 +145,7 @@
               <i
                 class="bi bi-person-circle text-xl text-gray-400 ml-[-15px]"
               ></i>
-              <button class="inline bg-[#435DAF] text-white rounded-md p-1 text-sm"> <i
+              <button class="inline bg-[#435DAF] text-white rounded-md p-1 text-sm" id="addTaskBtn"> <i
                 class="bi bi-plus"
               ></i> Add Task</button>
             </div>
@@ -725,8 +725,8 @@
                   </div>
                   <div class="task-actions text-blue-700">
                     <i class="bi bi-eye"></i>
-                    <i class="bi bi-trash-fill"></i>
-                    <i class="bi bi-pencil-fill"></i>
+                    <i class="bi bi-trash-fill delete-${`task.id`}"></i>
+                    <i class="bi bi-pencil-fill edit-${`task.id`}"></i>
                   </div>
                 </div>
               </div>
@@ -760,9 +760,16 @@
 
   // Fetch tasks from the API
   function fetchTasks() {
+    const accessToken = localStorage.getItem('access');
+    const refreshToken = localStorage.getItem('refresh');
+    const csrftoken = getCookie('csrftoken');
     $.ajax({
       url: '/api/tasks/', // Replace with your API endpoint
       method: 'GET',
+       headers: {
+                    'Authorization': `Bearer ${accessToken}`,
+                    'X-CSRFToken': csrftoken
+                },
       dataType: 'json',
       success: function(data) {
         tasks = data.results; // Assuming the API returns an array of tasks
@@ -794,12 +801,7 @@
             $('#taskModal textarea[name="description"]').val('');
             $('#taskModal input[name="due_date"]').val('');
         }
-        $('#taskModal').modal('show');
-    }
-
-    // Function to get the CSRF token
-    function getCSRFToken() {
-        return document.querySelector('[name=csrfmiddlewaretoken]').value;
+        $('#taskModal').show();
     }
 
     // Function to handle form submission
@@ -825,7 +827,7 @@
             success: function(response) {
                 $('#taskModal').modal('hide');
                 // Refresh tasks
-                loadTasks();
+                renderTasks()
             },
             error: function(xhr) {
                 console.error(xhr.responseText);
@@ -836,15 +838,19 @@
     // Function to load tasks from the API
     // Function to delete a task
     function deleteTask(taskId) {
+      const accessToken = localStorage.getItem('access');
+      const refreshToken = localStorage.getItem('refresh');
+      const csrftoken = getCookie('csrftoken');
         $.ajax({
             url: `/api/tasks/${taskId}/`,
             method: 'DELETE',
-            headers: {
-                'X-CSRFToken': getCSRFToken(),
-            },
+                 headers: {
+                    'Authorization': `Bearer ${accessToken}`,
+                    'X-CSRFToken': csrftoken
+                },
             success: function(response) {
                 // Refresh tasks
-                loadTasks();
+                renderTasks();
             },
             error: function(xhr) {
                 console.error(xhr.responseText);
