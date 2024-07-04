@@ -154,7 +154,7 @@
         <div class=""></div>
         <div class="tasks flex flex-col md:flex-row justify-between mt-5">
 
-          <div class="incomplete flex flex-col w-[30%]">
+          <div class="inprogress flex flex-col w-[30%]">
             <div
               class="border-blue-700 rounded-md border-2 flex justify-between items-center p-2 mb-5"
             >
@@ -621,12 +621,13 @@
 
   // Function to render tasks
   function renderTasks() {
-    $('.incomplete, .completed, .todo').empty();
+    //$('.incomplete, .completed, .todo').empty();
     tasks.forEach(task => {
+      console.log(task);
       let taskHtml = `
         <div class="task-content mb-9" id="task-${task.id}">
           <div class="task-header flex justify-between items-center">
-            <span class="bg-${getPriorityColor(task.priority)} rounded-md px-3 py-1 text-sm">${task.priority}</span>
+            <span class="bg-[${getPriorityColor(task.priority)}] rounded-md px-3 py-1 text-sm">${task.priority}</span>
             <span class="shadow-xl rounded-md px-3 py-1 text-purple-500 font-semibold text-sm">
               <i class="bi bi-clock pr-1"></i>${task.time}
             </span>
