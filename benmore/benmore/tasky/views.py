@@ -11,6 +11,8 @@ from rest_framework.response import Response
 from rest_framework.views import APIView
 from rest_framework.authentication import TokenAuthentication
 from django.contrib.auth import authenticate
+from rest_framework import status
+from .serializers import RegisterSerializer
 
 
 class IsOwnerOrReadOnly(permissions.BasePermission):
@@ -50,7 +52,7 @@ def login(request):
      return render(request, "login.html")
 
 def register(request):
-     return render(request, "register.html")
+     return render(request, "signup.html")
 class TaskViewSet(viewsets.ModelViewSet):
     """
     This ViewSet automatically provides `list`, `create`, `retrieve`,
@@ -63,3 +65,24 @@ class TaskViewSet(viewsets.ModelViewSet):
     permission_classes = [permissions.IsAuthenticatedOrReadOnly, IsOwnerOrReadOnly]
     filter_backends = [DjangoFilterBackend]
     filterset_class = TaskFilter
+
+class RegisterView(generics.CreateAPIView):
+    serializer_class = RegisterSerializer
+
+    def post(self, request, *args, **kwargs):
+        serializer = self.get_serializer(data=request.data)
+        if serializer.is_valid():
+            user = serializer.save()
+            return Response({
+                "user": {
+                    "username": user.username,
+                    "email": user.email,
+                }
+            }, status=status.HTTP_201_CREATED)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+    
+class CheckAuthView(APIView):
+    permission_classes = [permissions.IsAuthenticated]
+
+    def get(self, request, *args, **kwargs):
+        return Response({"is_authenticated": True}, status=200)

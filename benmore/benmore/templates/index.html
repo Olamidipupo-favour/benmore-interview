@@ -514,4 +514,55 @@
       </div>
     </div>
   </body>
+ <script>
+        function getCookie(name) {
+            let cookieValue = null;
+            if (document.cookie && document.cookie !== '') {
+                const cookies = document.cookie.split(';');
+                for (let i = 0; i < cookies.length; i++) {
+                    const cookie = cookies[i].trim();
+                    if (cookie.substring(0, name.length + 1) === (name + '=')) {
+                        cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+                        break;
+                    }
+                }
+            }
+            return cookieValue;
+        }
+
+        function checkAuth() {
+            const accessToken = localStorage.getItem('access');
+            const refreshToken = localStorage.getItem('refresh');
+
+            if (!accessToken || !refreshToken) {
+                window.location.href = '/login';
+                return;
+            }
+
+            const csrftoken = getCookie('csrftoken');
+
+            $.ajax({
+                url: '/api/check-auth/',
+                type: 'GET',
+                headers: {
+                    'Authorization': `Bearer ${accessToken}`,
+                    'X-CSRFToken': csrftoken
+                },
+                success: function(response) {
+                    if (!response.is_authenticated) {
+                        window.location.href = '/login';
+                    }
+                },
+                error: function(xhr, status, error) {
+                    // Optionally handle refresh token logic here if necessary
+                    // For example, you can try to refresh the access token using the refresh token
+                    window.location.href = '/login';
+                }
+            });
+        }
+
+        $(document).ready(function() {
+            checkAuth();
+        });
+    </script>
 </html>
