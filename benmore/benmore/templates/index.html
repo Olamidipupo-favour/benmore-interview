@@ -457,7 +457,7 @@
               <span class="">Over-Due (5)</span>
               <i class="bi bi-three-dots-vertical"></i>
             </div>
-            <div class="task-content-1">
+            <div class="task-content">
               <div class="task-header flex justify-between items-center">
                 <span class="bg-[#FEDEDE] rounded-md px-3 py-1 text-sm"
                   >High</span
@@ -566,6 +566,115 @@
 
         $(document).ready(function() {
             checkAuth();
-        });
+  // Function to enable dragging on .task-content elements
+ // Function to enable dragging on .task-content elements
+  function enableDragAndDrop() {
+    $('.task-content').attr('draggable', true);
+
+    // Add event listeners for drag events
+    $('.task-content').on('dragstart', function(event) {
+      event.originalEvent.dataTransfer.setData('text/plain', event.target.id);
+      event.originalEvent.dataTransfer.effectAllowed = 'move';
+      $(this).addClass('dragging');
+    });
+
+    $('.task-content').on('dragend', function() {
+      $(this).removeClass('dragging');
+    });
+
+    // Handle dragover event on the drop target
+    $('.incomplete, .completed, .todo').on('dragover', function(event) {
+      event.preventDefault();
+      event.originalEvent.dataTransfer.dropEffect = 'move';
+      $(this).addClass('dragover');
+    });
+
+    $('.incomplete, .completed, .todo').on('dragleave', function() {
+      $(this).removeClass('dragover');
+    });
+
+    // Handle drop event on the drop target
+    $('.incomplete, .completed, .todo').on('drop', function(event) {
+      event.preventDefault();
+      $(this).removeClass('dragover');
+
+      let data = event.originalEvent.dataTransfer.getData('text/plain');
+      let draggedElement = $('#' + data);
+      $(this).append(draggedElement);
+
+      // Update the task status
+      let newStatus = $(this).data('status');
+      updateTaskStatus(data, newStatus);
+    });
+  }
+
+  // Function to update the status of the task
+  function updateTaskStatus(taskId, newStatus) {
+    tasks = tasks.map(task => {
+      if (task.id == taskId) {
+        task.status = newStatus;
+      }
+      return task;
+    });
+    renderTasks(); // Re-render the tasks to reflect the updated status
+  }
+
+  // Function to render tasks
+  function renderTasks() {
+    $('.incomplete, .completed, .todo').empty();
+    tasks.forEach(task => {
+      let taskHtml = `
+        <div class="task-content mb-9" id="task-${task.id}">
+          <div class="task-header flex justify-between items-center">
+            <span class="bg-${getPriorityColor(task.priority)} rounded-md px-3 py-1 text-sm">${task.priority}</span>
+            <span class="shadow-xl rounded-md px-3 py-1 text-purple-500 font-semibold text-sm">
+              <i class="bi bi-clock pr-1"></i>${task.time}
+            </span>
+            <span class="rounded-md px-3 py-1 bg-purple-200 text-purple-800 text-sm">${task.type}</span>
+          </div>
+          <div class="task-body rounded-md bg-gray-200 mt-3 p-3">
+            <p class="text-xs mb-2 text-gray-700">${task.description}</p>
+            <span class="bi bi-person mr-[-5px]"></span><span class="bi bi-person"></span><span class="bi bi-person"></span>
+          </div>
+        </div>
+      `;
+      $(`.${task.status}`).append(taskHtml);
+    });
+
+    enableDragAndDrop(); // Enable drag and drop on the rendered tasks
+  }
+
+  // Function to get the priority color
+  function getPriorityColor(priority) {
+    switch(priority) {
+      case 'high': return '#FEDEDE';
+      case 'medium': return '#E8E8E8';
+      case 'low': return '#B4F2B4';
+      default: return '#E8E8E8';
+    }
+  }
+
+  // Fetch tasks from the API
+  function fetchTasks() {
+    $.ajax({
+      url: '/api/tasks/', // Replace with your API endpoint
+      method: 'GET',
+      dataType: 'json',
+      success: function(data) {
+        tasks = data.results; // Assuming the API returns an array of tasks
+        renderTasks(); // Render the tasks after fetching
+      },
+      error: function(xhr, status, error) {
+        console.error('Error fetching tasks:', error);
+      }
+    });
+  }
+
+  // Initial setup
+  let tasks = []; // Empty array to hold tasks
+
+  // Fetch and render tasks on page load
+  fetchTasks();
+});
     </script>
 </html>
