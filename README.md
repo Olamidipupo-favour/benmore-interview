@@ -30,4 +30,4 @@ python manage.py migrate
 python migrate.py runserver
 ```
 
-The URL for deployed version of this interview is located at [tasky](https://github.com/kmjones1979/full-stack-dapp-workshop/blob/main/README.md)
+The URL for deployed version of this interview is located at [tasky](https://benmore-interview.onrender.com/)
