@@ -621,7 +621,10 @@
         }
 
         $(document).ready(function() {
+            let tasks = []; // Empty array to hold tasks
             checkAuth();
+              fetchTasks();
+  renderTasks();
   // Function to enable dragging on .task-content elements
  // Function to enable dragging on .task-content elements
   function enableDragAndDrop() {
@@ -729,8 +732,8 @@
                   </div>
                   <div class="task-actions text-blue-700">
                     <i class="bi bi-eye"></i>
-                    <i class="bi bi-trash-fill delete-${`task.id`}"></i>
-                    <i class="bi bi-pencil-fill edit-${`task.id`}"></i>
+                    <i class="bi bi-trash-fill delete delete-${task.id}"></i>
+                    <i class="bi bi-pencil-fill edit edit-${task.id}"></i>
                   </div>
                 </div>
               </div>
@@ -786,10 +789,10 @@
   }
 
   // Initial setup
-  let tasks = []; // Empty array to hold tasks
+
 
   // Fetch and render tasks on page load
-  fetchTasks();
+
 
    // Function to show the add/edit modal
     function showModal(title, task = null) {
@@ -894,7 +897,8 @@ console.log(taskData);
     });
 
     // Delete task button click
-    $('#taskList').on('click', '.delete-task', function() {
+    $('.task-content').on('click', '.delete', function() {
+      alert("here")
         const taskId = $(this).closest('.task-item').data('id');
         if (confirm('Are you sure you want to delete this task?')) {
             deleteTask(taskId);
@@ -902,7 +906,7 @@ console.log(taskData);
     });
 
     // Form submission
-    $('#taskForm').submit(handleFormSubmit);
+    //$('#taskForm').submit(handleFormSubmit);
     $('#saveTask').click(handleFormSubmit);
 });
     </script>
