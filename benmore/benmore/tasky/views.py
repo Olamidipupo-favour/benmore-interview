@@ -64,6 +64,14 @@ class TaskViewSet(viewsets.ModelViewSet):
     filter_backends = [DjangoFilterBackend]
     filterset_class = TaskFilter
 
+    def get_queryset(self):
+        """
+        This view should return a list of all the tasks
+        for the currently authenticated user.
+        """
+        user = self.request.user
+        return Task.objects.filter(assigned_to=user)
+    
     def perform_create(self, serializer):
         serializer.save(assigned_to=self.request.user)
 

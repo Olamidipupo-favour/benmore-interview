@@ -525,14 +525,14 @@
         <div class="mb-4">
           <label for="taskPriority" class="block text-gray-700 text-sm font-bold mb-2">Priority:</label>
           <select id="taskPriority" name='priority' class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline">
-            <option value="high">High</option>
-            <option value="medium">Medium</option>
-            <option value="low">Low</option>
+            <option value="High">High</option>
+            <option value="Medium">Medium</option>
+            <option value="Low">Low</option>
           </select>
         </div>
         <div class="mb-4">
           <label for="taskTime" class="block text-gray-700 text-sm font-bold mb-2">Due Date:</label>
-          <input type="datetime-local" id="taskTime" class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline">
+          <input type="datetime-local" pattern="[0-9]{2}:[0-9]{2}" required name="due_date" id="taskTime" class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"/>
         </div>
         <div class="mb-4">
           <label for="taskType" class="block text-gray-700 text-sm font-bold mb-2">Type:</label>
@@ -818,13 +818,13 @@
         const method = taskId ? 'PUT' : 'POST';
         const taskData = {
             title: $('#taskModal input[name="title"]').val(),
-            priority: $('#taskModal input[name="priority"]').val(),
+            priority: $('#taskModal select[name="priority"]').val(),
             category: $('#taskModal input[name="type"]').val(),
             status: "In Progress",
             description: $('#taskModal textarea[name="description"]').val(),
-            due_date: $('#taskModal input[name="due_date"]').val(),
+            due_date: new Date($('#taskModal input[name="due_date"]').val()).toTimeString().split(' ')[0],
         };
-
+console.log(taskData);
         $.ajax({
             url: url,
             method: method,
