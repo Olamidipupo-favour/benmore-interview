@@ -154,7 +154,7 @@
         <div class=""></div>
         <div class="tasks flex flex-col md:flex-row justify-between mt-5">
 
-          <div class="inprogress flex flex-col w-[30%]">
+          <div class="inprogress flex flex-col w-[30%]" data-status="In Progress">
             <div
               class="border-blue-700 rounded-md border-2 flex justify-between items-center p-2 "
             >
@@ -331,7 +331,7 @@
             </div>
           </div>
 
-          <div class="completed flex flex-col w-[30%]">
+          <div class="completed flex flex-col w-[30%]" data-status="Completed">
             <div
               class="border-blue-700 rounded-md border-2 flex justify-between items-center p-2 mb-5"
             >
@@ -450,7 +450,7 @@
             </div>
           </div>
 
-          <div class="overdue flex flex-col w-[30%]">
+          <div class="overdue flex flex-col w-[30%]" data-status="Overdue">
             <div
               class="border-blue-700 rounded-md border-2 flex justify-between items-center p-2 mb-5"
             >
@@ -574,6 +574,25 @@
     </div>
   </body>
  <script>
+    
+    function showModal(title, task = null) {
+        $('#taskModal .modal-title').text(title);
+        if (task) {
+            $('#taskModal input[name="id"]').val(task.id);
+            $('#taskModal input[name="title"]').val(task.title);
+            $('#taskModal textarea[name="description"]').val(task.description);
+            $('#taskModal input[name="due_date"]').val(task.due_date);
+        } else {
+            $('#taskModal input[name="id"]').val('');
+            $('#taskModal input[name="title"]').val('');
+            $('#taskModal textarea[name="description"]').val('');
+            $('#taskModal input[name="due_date"]').val('');
+        }
+        $('#taskModal').show();
+    }
+
+
+      
         function getCookie(name) {
             let cookieValue = null;
             if (document.cookie && document.cookie !== '') {
@@ -624,60 +643,73 @@
             let tasks = []; // Empty array to hold tasks
             checkAuth();
               fetchTasks();
-  renderTasks();
-  // Function to enable dragging on .task-content elements
- // Function to enable dragging on .task-content elements
-  function enableDragAndDrop() {
+              renderTasks();
+
+function enableDragAndDrop() {
     $('.task-content').attr('draggable', true);
 
     // Add event listeners for drag events
     $('.task-content').on('dragstart', function(event) {
-      event.originalEvent.dataTransfer.setData('text/plain', event.target.id);
-      event.originalEvent.dataTransfer.effectAllowed = 'move';
-      $(this).addClass('dragging');
+        event.originalEvent.dataTransfer.setData('text/plain', event.target.id);
+        event.originalEvent.dataTransfer.effectAllowed = 'move';
+        $(this).addClass('dragging');
     });
 
     $('.task-content').on('dragend', function() {
-      $(this).removeClass('dragging');
+        $(this).removeClass('dragging');
     });
 
     // Handle dragover event on the drop target
-    $('.incomplete, .completed, .todo').on('dragover', function(event) {
-      event.preventDefault();
-      event.originalEvent.dataTransfer.dropEffect = 'move';
-      $(this).addClass('dragover');
+    $('.inprogress, .completed, .overdue').on('dragover', function(event) {
+        event.preventDefault();
+        event.originalEvent.dataTransfer.dropEffect = 'move';
+        $(this).addClass('dragover');
     });
 
-    $('.incomplete, .completed, .todo').on('dragleave', function() {
-      $(this).removeClass('dragover');
+    $('.inprogress, .completed, .overdue').on('dragleave', function() {
+        $(this).removeClass('dragover');
     });
 
     // Handle drop event on the drop target
-    $('.incomplete, .completed, .todo').on('drop', function(event) {
-      event.preventDefault();
-      $(this).removeClass('dragover');
+    $('.inprogress, .completed, .overdue').on('drop', function(event) {
+        event.preventDefault();
+        $(this).removeClass('dragover');
 
-      let data = event.originalEvent.dataTransfer.getData('text/plain');
-      let draggedElement = $('#' + data);
-      $(this).append(draggedElement);
+        let data = event.originalEvent.dataTransfer.getData('text/plain');
+        let draggedElement = $('#' + data);
+        $(this).append(draggedElement);
 
-      // Update the task status
-      let newStatus = $(this).data('status');
-      updateTaskStatus(data, newStatus);
+        // Update the task status
+        let newStatus = $(this).data('status');
+        console.log('New status:', newStatus);
+        updateTaskStatus(data.split('-')[1], newStatus); // Assuming ID is part of the task ID attribute
     });
-  }
+}
 
-  // Function to update the status of the task
-  function updateTaskStatus(taskId, newStatus) {
-    tasks = tasks.map(task => {
-      if (task.id == taskId) {
-        task.status = newStatus;
-      }
-      return task;
+// Define the updateTaskStatus function
+function updateTaskStatus(taskId, newStatus) {
+    const accessToken = localStorage.getItem('access');
+    const csrftoken = getCookie('csrftoken');
+
+    $.ajax({
+        url: `/api/tasks/${taskId}/`,
+        method: 'PATCH',
+        headers: {
+            'Authorization': `Bearer ${accessToken}`,
+            'X-CSRFToken': csrftoken,
+        },
+        contentType: 'application/json',
+        data: JSON.stringify({ status: newStatus }),
+        success: function(response) {
+            console.log('Task status updated successfully:', response);
+            fetchTasks(); // Refresh tasks after updating the status
+        },
+        error: function(xhr) {
+            console.error('Error updating task status:', xhr.responseText);
+        }
     });
-    //update 
-    renderTasks(); // Re-render the tasks to reflect the updated status
-  }
+}
+
 
   // Function to render tasks
   function renderTasks() {
@@ -758,9 +790,9 @@
   // Function to get the priority color
   function getPriorityColor(priority) {
     switch(priority) {
-      case 'high': return '#FEDEDE';
-      case 'medium': return '#E8E8E8';
-      case 'low': return '#B4F2B4';
+      case 'High': return '#FEDEDE';
+      case 'Medium': return '#E8E8E8';
+      case 'Low': return '#B4F2B4';
       default: return '#E8E8E8';
     }
   }
@@ -788,30 +820,36 @@
     });
   }
 
-  // Initial setup
+    $('#addTaskBtn').click(function() {
+        showModal('Add Task');
+    });
 
-
-  // Fetch and render tasks on page load
-
-
-   // Function to show the add/edit modal
-    function showModal(title, task = null) {
-        $('#taskModal .modal-title').text(title);
-        if (task) {
-            $('#taskModal input[name="id"]').val(task.id);
-            $('#taskModal input[name="title"]').val(task.title);
-            $('#taskModal textarea[name="description"]').val(task.description);
-            $('#taskModal input[name="due_date"]').val(task.due_date);
-        } else {
-            $('#taskModal input[name="id"]').val('');
-            $('#taskModal input[name="title"]').val('');
-            $('#taskModal textarea[name="description"]').val('');
-            $('#taskModal input[name="due_date"]').val('');
+    $('.close-modal').click(function() {
+      $('#taskModal').hide();
+    })
+    // Edit task button click
+    $(document).on('click', '.edit', function() {
+        const taskId = $(this).closest('.task-content').attr('id').split('-')[1];
+        $.ajax({
+            url: `/api/tasks/${taskId}/`,
+            method: 'GET',
+            success: function(task) {
+                showModal('Edit Task', task);
+            },
+            error: function(xhr) {
+                console.error(xhr.responseText);
+            }
+        });
+    });
+ 
+     $(document).on('click', '.delete', function() {
+        const taskId = $(this).closest('.task-content').attr('id').split('-')[1];
+        if (confirm('Are you sure you want to delete this task?')) {
+            deleteTask(taskId);
         }
-        $('#taskModal').show();
-    }
-
-    // Function to handle form submission
+    });
+    //$('#taskForm').submit(handleFormSubmit);
+    $('#saveTask').click(handleFormSubmit);
     function handleFormSubmit(event) {
         event.preventDefault();
         const accessToken = localStorage.getItem('access');
@@ -840,6 +878,7 @@ console.log(taskData);
             success: function(response) {
                 $('#taskModal').hide();
                 // Refresh tasks
+                fetchTasks()
                 renderTasks()
             },
             error: function(xhr) {
@@ -847,9 +886,6 @@ console.log(taskData);
             }
         });
     }
-
-    // Function to load tasks from the API
-    // Function to delete a task
     function deleteTask(taskId) {
       const accessToken = localStorage.getItem('access');
       const refreshToken = localStorage.getItem('refresh');
@@ -863,6 +899,7 @@ console.log(taskData);
                 },
             success: function(response) {
                 // Refresh tasks
+                fetchTasks()
                 renderTasks();
             },
             error: function(xhr) {
@@ -871,43 +908,6 @@ console.log(taskData);
         });
     }
 
-    // Load tasks on page load
-
-    // Add task button click
-    $('#addTaskBtn').click(function() {
-        showModal('Add Task');
-    });
-
-    $('.close-modal').click(function() {
-      $('#taskModal').hide();
-    })
-    // Edit task button click
-    $('#taskList').on('click', '.edit-task', function() {
-        const taskId = $(this).closest('.task-item').data('id');
-        $.ajax({
-            url: `/api/tasks/${taskId}/`,
-            method: 'GET',
-            success: function(task) {
-                showModal('Edit Task', task);
-            },
-            error: function(xhr) {
-                console.error(xhr.responseText);
-            }
-        });
-    });
-
-    // Delete task button click
-    $('.task-content').on('click', '.delete', function() {
-      alert("here")
-        const taskId = $(this).closest('.task-item').data('id');
-        if (confirm('Are you sure you want to delete this task?')) {
-            deleteTask(taskId);
-        }
-    });
-
-    // Form submission
-    //$('#taskForm').submit(handleFormSubmit);
-    $('#saveTask').click(handleFormSubmit);
 });
     </script>
 </html>
