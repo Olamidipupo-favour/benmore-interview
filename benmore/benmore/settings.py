@@ -25,7 +25,7 @@ SECRET_KEY = 'django-insecure-)e8aynyjb4&o71^ub56_+8hwuk=6lbpcjw5x(066@3@snnf^(j
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['benmore-interview.onrender.com']
 
 
 # Application definition
