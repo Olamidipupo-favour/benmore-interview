@@ -8,7 +8,7 @@ class Task(models.Model):
     priority = models.CharField(max_length=50, choices=[('Low', 'Low'), ('Medium', 'Medium'), ('High', 'High')])
     status= models.CharField(max_length=50, choices=[('In Progress', 'In Progress'), ('Completed', 'Completed'), ('Overdue', 'Overdue')])
     category = models.CharField(max_length=50)
-    due_date = models.TimeField()
+    due_date = models.TimeField(null=True,blank=True)
 
     def __str__(self):
         return self.title
