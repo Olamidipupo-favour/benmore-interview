@@ -49,6 +49,18 @@
       .status {
         text-transform: capitalize;
       }
+      .task-content {
+    transition: all 0.2s ease-in-out; /* Smooth transition */
+}
+
+.dragging {
+    opacity: 0.5;
+}
+
+.dragover {
+    border: 2px dashed #ccc;
+    background-color: #f9f9f9;
+}
     </style>
   </head>
   <body>
@@ -581,12 +593,16 @@
             $('#taskModal input[name="id"]').val(task.id);
             $('#taskModal input[name="title"]').val(task.title);
             $('#taskModal textarea[name="description"]').val(task.description);
+            $('#taskModal select[name="priority"]').val(task.priority);
+            $('#taskModal input[name="type"]').val(task.category);
             $('#taskModal input[name="due_date"]').val(task.due_date);
         } else {
             $('#taskModal input[name="id"]').val('');
             $('#taskModal input[name="title"]').val('');
             $('#taskModal textarea[name="description"]').val('');
             $('#taskModal input[name="due_date"]').val('');
+            $('#taskModal select[name="priority"]').val('');
+            $('#taskModal input[name="type"]').val('');
         }
         $('#taskModal').show();
     }
@@ -703,14 +719,13 @@ function updateTaskStatus(taskId, newStatus) {
         success: function(response) {
             console.log('Task status updated successfully:', response);
             fetchTasks(); // Refresh tasks after updating the status
+            window.location.reload()
         },
         error: function(xhr) {
             console.error('Error updating task status:', xhr.responseText);
         }
     });
 }
-
-
   // Function to render tasks
   function renderTasks() {
     $('.task-content, .task-content-1').empty();
@@ -830,11 +845,13 @@ function updateTaskStatus(taskId, newStatus) {
     // Edit task button click
     $(document).on('click', '.edit', function() {
         const taskId = $(this).closest('.task-content').attr('id').split('-')[1];
+        console.log(taskId);
         $.ajax({
-            url: `/api/tasks/${taskId}/`,
+            url: `/api/tasks/?id=${taskId}`,
             method: 'GET',
-            success: function(task) {
-                showModal('Edit Task', task);
+            success: function(task1) {
+              console.log(task1.results[0])
+                showModal('Edit Task', task1.results[0]);
             },
             error: function(xhr) {
                 console.error(xhr.responseText);
@@ -855,7 +872,7 @@ function updateTaskStatus(taskId, newStatus) {
         const accessToken = localStorage.getItem('access');
         const refreshToken = localStorage.getItem('refresh');
         const taskId = $('#taskModal input[name="id"]').val();
-        const url = taskId ? `/api/tasks/${taskId}/` : '/api/tasks/';
+        const url = taskId ? `/api/tasks/?id=${taskId}` : '/api/tasks/';
         const method = taskId ? 'PUT' : 'POST';
         const taskData = {
             title: $('#taskModal input[name="title"]').val(),
