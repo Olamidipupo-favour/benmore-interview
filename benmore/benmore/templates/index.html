@@ -50,17 +50,17 @@
         text-transform: capitalize;
       }
       .task-content {
-    transition: all 0.2s ease-in-out; /* Smooth transition */
-}
+        transition: all 0.2s ease-in-out; /* Smooth transition */
+      }
 
-.dragging {
-    opacity: 0.5;
-}
+      .dragging {
+        opacity: 0.5;
+      }
 
-.dragover {
-    border: 2px dashed #ccc;
-    background-color: #f9f9f9;
-}
+      .dragover {
+        border: 2px dashed #ccc;
+        background-color: #f9f9f9;
+      }
     </style>
   </head>
   <body>
@@ -157,23 +157,28 @@
               <i
                 class="bi bi-person-circle text-xl text-gray-400 ml-[-15px]"
               ></i>
-              <button class="inline bg-[#435DAF] text-white rounded-md p-1 text-sm" id="addTaskBtn"> <i
-                class="bi bi-plus"
-              ></i> Add Task</button>
+              <button
+                class="inline bg-[#435DAF] text-white rounded-md p-1 text-sm"
+                id="addTaskBtn"
+              >
+                <i class="bi bi-plus"></i> Add Task
+              </button>
             </div>
           </div>
         </div>
         <div class=""></div>
         <div class="tasks flex flex-col md:flex-row justify-between mt-5">
-
-          <div class="inprogress flex flex-col w-[30%]" data-status="In Progress">
+          <div
+            class="inprogress flex flex-col w-[30%]"
+            data-status="In Progress"
+          >
             <div
-              class="border-blue-700 rounded-md border-2 flex justify-between items-center p-2 "
+              class="border-blue-700 rounded-md border-2 flex justify-between items-center p-2"
             >
               <span class="">In Progress(2) </span>
               <i class="bi bi-three-dots-vertical text-right"></i>
             </div>
-               <div class="task-content mb-9">
+            <div class="task-content mb-9">
               <div class="task-header flex justify-between items-center">
                 <span class="bg-[#FEDEDE] rounded-md px-3 py-1 text-sm"
                   >High</span
@@ -229,8 +234,7 @@
               </div>
             </div>
 
-
-             <div class="task-content mb-9">
+            <div class="task-content mb-9">
               <div class="task-header flex justify-between items-center">
                 <span class="bg-[#FEDEDE] rounded-md px-3 py-1 text-sm"
                   >High</span
@@ -286,7 +290,7 @@
               </div>
             </div>
 
-                         <div class="task-content mb-9">
+            <div class="task-content mb-9">
               <div class="task-header flex justify-between items-center">
                 <span class="bg-[#FEDEDE] rounded-md px-3 py-1 text-sm"
                   >High</span
@@ -350,7 +354,7 @@
               <span class="">Completed Task (4) </span>
               <i class="bi bi-three-dots-vertical text-right"></i>
             </div>
-                    <div class="task-content mb-9">
+            <div class="task-content mb-9">
               <div class="task-header flex justify-between items-center">
                 <span class="bg-[#FEDEDE] rounded-md px-3 py-1 text-sm"
                   >High</span
@@ -405,7 +409,7 @@
                 </div>
               </div>
             </div>
-             <div class="task-content mb-9">
+            <div class="task-content mb-9">
               <div class="task-header flex justify-between items-center">
                 <span class="bg-[#FEDEDE] rounded-md px-3 py-1 text-sm"
                   >High</span
@@ -527,213 +531,294 @@
           </div>
 
           <!-- Add/Edit Task Modal -->
-<div id="taskModal" class="modal hidden fixed z-10 inset-0 overflow-y-auto">
-  <div class="flex items-center justify-center min-h-screen">
-    <div class="modal-content bg-white rounded-lg shadow-lg p-6 relative w-full max-w-lg">
-      <button class="close-modal absolute top-3 right-3 cursor-pointer text-gray-500">&times;</button>
-      <h2 class="text-lg font-bold mb-4" id="modalTitle">Add Task</h2>
-      <form id="taskForm">
-        <input type="hidden" id="taskId">
-        <div class="mb-4">
-          <label for="taskPriority" class="block text-gray-700 text-sm font-bold mb-2">Priority:</label>
-          <select id="taskPriority" name='priority' class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline">
-            <option value="High">High</option>
-            <option value="Medium">Medium</option>
-            <option value="Low">Low</option>
-          </select>
-        </div>
-        <div class="mb-4">
-          <label for="taskTime" class="block text-gray-700 text-sm font-bold mb-2">Due Date:</label>
-          <input type="datetime-local" pattern="[0-9]{2}:[0-9]{2}" required name="due_date" id="taskTime" class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"/>
-        </div>
-        <div class="mb-4">
-          <label for="taskType" class="block text-gray-700 text-sm font-bold mb-2">Type:</label>
-          <input type="text" id="taskType" name="type" class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline">
-        </div>
-         <div class="mb-4">
-          <label for="taskTitle" class="block text-gray-700 text-sm font-bold mb-2">Title:</label>
-          <input id="taskTitle" class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" name="title"/>
-        </div>
-        <div class="mb-4">
-          <label for="taskDescription" class="block text-gray-700 text-sm font-bold mb-2">Description:</label>
-          <textarea id="taskDescription" class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" name="description"></textarea>
-        </div>
-        <div class="flex justify-end">
-          <button type="button" id="saveTask" class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline">Save</button>
-        </div>
-      </form>
-    </div>
-  </div>
-</div>
+          <div
+            id="taskModal"
+            class="modal hidden fixed z-10 inset-0 overflow-y-auto"
+          >
+            <div class="flex items-center justify-center min-h-screen">
+              <div
+                class="modal-content bg-white rounded-lg shadow-lg p-6 relative w-full max-w-lg"
+              >
+                <button
+                  class="close-modal absolute top-3 right-3 cursor-pointer text-gray-500"
+                >
+                  &times;
+                </button>
+                <h2 class="text-lg font-bold mb-4" id="modalTitle">Add Task</h2>
+                <form id="taskForm">
+                  <input type="hidden" id="taskId" />
+                  <div class="mb-4">
+                    <label
+                      for="taskPriority"
+                      class="block text-gray-700 text-sm font-bold mb-2"
+                      >Priority:</label
+                    >
+                    <select
+                      id="taskPriority"
+                      name="priority"
+                      class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+                    >
+                      <option value="High">High</option>
+                      <option value="Medium">Medium</option>
+                      <option value="Low">Low</option>
+                    </select>
+                  </div>
+                  <div class="mb-4">
+                    <label
+                      for="taskTime"
+                      class="block text-gray-700 text-sm font-bold mb-2"
+                      >Due Date:</label
+                    >
+                    <input
+                      type="datetime-local"
+                      pattern="[0-9]{2}:[0-9]{2}"
+                      required
+                      name="due_date"
+                      id="taskTime"
+                      class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+                    />
+                  </div>
+                  <div class="mb-4">
+                    <label
+                      for="taskType"
+                      class="block text-gray-700 text-sm font-bold mb-2"
+                      >Type:</label
+                    >
+                    <input
+                      type="text"
+                      id="taskType"
+                      name="type"
+                      class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+                    />
+                  </div>
+                  <div class="mb-4">
+                    <label
+                      for="taskTitle"
+                      class="block text-gray-700 text-sm font-bold mb-2"
+                      >Title:</label
+                    >
+                    <input
+                      id="taskTitle"
+                      class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+                      name="title"
+                    />
+                  </div>
+                  <div class="mb-4">
+                    <label
+                      for="taskDescription"
+                      class="block text-gray-700 text-sm font-bold mb-2"
+                      >Description:</label
+                    >
+                    <textarea
+                      id="taskDescription"
+                      class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+                      name="description"
+                    ></textarea>
+                  </div>
+                  <div class="flex justify-end">
+                    <button
+                      type="button"
+                      id="saveTask"
+                      class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
+                    >
+                      Save
+                    </button>
+                  </div>
+                </form>
+              </div>
+            </div>
+          </div>
 
-<!-- Delete Confirmation Modal -->
-<div id="deleteModal" class="modal hidden fixed z-10 inset-0 overflow-y-auto">
-  <div class="flex items-center justify-center min-h-screen">
-    <div class="modal-content bg-white rounded-lg shadow-lg p-6 relative w-full max-w-lg">
-      <span class="close-modal absolute top-3 right-3 cursor-pointer text-gray-500">&times;</span>
-      <h2 class="text-lg font-bold mb-4">Delete Task</h2>
-      <p>Are you sure you want to delete this task?</p>
-      <div class="flex justify-end mt-4">
-        <button type="button" id="confirmDelete" class="bg-red-500 hover:bg-red-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline">Delete</button>
-        <button type="button" class="close-modal ml-2 bg-gray-500 hover:bg-gray-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline">Cancel</button>
-      </div>
-    </div>
-  </div>
-</div>
-
+          <!-- Delete Confirmation Modal -->
+          <div
+            id="deleteModal"
+            class="modal hidden fixed z-10 inset-0 overflow-y-auto"
+          >
+            <div class="flex items-center justify-center min-h-screen">
+              <div
+                class="modal-content bg-white rounded-lg shadow-lg p-6 relative w-full max-w-lg"
+              >
+                <span
+                  class="close-modal absolute top-3 right-3 cursor-pointer text-gray-500"
+                  >&times;</span
+                >
+                <h2 class="text-lg font-bold mb-4">Delete Task</h2>
+                <p>Are you sure you want to delete this task?</p>
+                <div class="flex justify-end mt-4">
+                  <button
+                    type="button"
+                    id="confirmDelete"
+                    class="bg-red-500 hover:bg-red-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
+                  >
+                    Delete
+                  </button>
+                  <button
+                    type="button"
+                    class="close-modal ml-2 bg-gray-500 hover:bg-gray-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
+                  >
+                    Cancel
+                  </button>
+                </div>
+              </div>
+            </div>
+          </div>
         </div>
       </div>
     </div>
   </body>
- <script>
-    
+  <script>
     function showModal(title, task = null) {
-        $('#taskModal .modal-title').text(title);
-        if (task) {
-            $('#taskModal input[name="id"]').val(task.id);
-            $('#taskModal input[name="title"]').val(task.title);
-            $('#taskModal textarea[name="description"]').val(task.description);
-            $('#taskModal select[name="priority"]').val(task.priority);
-            $('#taskModal input[name="type"]').val(task.category);
-            $('#taskModal input[name="due_date"]').val(task.due_date);
-        } else {
-            $('#taskModal input[name="id"]').val('');
-            $('#taskModal input[name="title"]').val('');
-            $('#taskModal textarea[name="description"]').val('');
-            $('#taskModal input[name="due_date"]').val('');
-            $('#taskModal select[name="priority"]').val('');
-            $('#taskModal input[name="type"]').val('');
-        }
-        $('#taskModal').show();
+      $("#taskModal .modal-title").text(title);
+      if (task) {
+        $('#taskModal input[name="id"]').val(task.id);
+        $('#taskModal input[name="title"]').val(task.title);
+        $('#taskModal textarea[name="description"]').val(task.description);
+        $('#taskModal select[name="priority"]').val(task.priority);
+        $('#taskModal input[name="type"]').val(task.category);
+        $('#taskModal input[name="due_date"]').val(task.due_date);
+      } else {
+        $('#taskModal input[name="id"]').val("");
+        $('#taskModal input[name="title"]').val("");
+        $('#taskModal textarea[name="description"]').val("");
+        $('#taskModal input[name="due_date"]').val("");
+        $('#taskModal select[name="priority"]').val("");
+        $('#taskModal input[name="type"]').val("");
+      }
+      $("#taskModal").show();
     }
 
-
-      
-        function getCookie(name) {
-            let cookieValue = null;
-            if (document.cookie && document.cookie !== '') {
-                const cookies = document.cookie.split(';');
-                for (let i = 0; i < cookies.length; i++) {
-                    const cookie = cookies[i].trim();
-                    if (cookie.substring(0, name.length + 1) === (name + '=')) {
-                        cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
-                        break;
-                    }
-                }
-            }
-            return cookieValue;
+    function getCookie(name) {
+      let cookieValue = null;
+      if (document.cookie && document.cookie !== "") {
+        const cookies = document.cookie.split(";");
+        for (let i = 0; i < cookies.length; i++) {
+          const cookie = cookies[i].trim();
+          if (cookie.substring(0, name.length + 1) === name + "=") {
+            cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+            break;
+          }
         }
+      }
+      return cookieValue;
+    }
 
-        function checkAuth() {
-            const accessToken = localStorage.getItem('access');
-            const refreshToken = localStorage.getItem('refresh');
+    function checkAuth() {
+      const accessToken = localStorage.getItem("access");
+      const refreshToken = localStorage.getItem("refresh");
 
-            if (!accessToken || !refreshToken) {
-                window.location.href = '/login';
-                return;
-            }
+      if (!accessToken || !refreshToken) {
+        window.location.href = "/login";
+        return;
+      }
 
-            const csrftoken = getCookie('csrftoken');
+      const csrftoken = getCookie("csrftoken");
 
-            $.ajax({
-                url: '/api/check-auth/',
-                type: 'GET',
-                headers: {
-                    'Authorization': `Bearer ${accessToken}`,
-                    'X-CSRFToken': csrftoken
-                },
-                success: function(response) {
-                    if (!response.is_authenticated) {
-                        window.location.href = '/login';
-                    }
-                },
-                error: function(xhr, status, error) {
-                    // Optionally handle refresh token logic here if necessary
-                    // For example, you can try to refresh the access token using the refresh token
-                    window.location.href = '/login';
-                }
-            });
-        }
-
-        $(document).ready(function() {
-            let tasks = []; // Empty array to hold tasks
-            checkAuth();
-              fetchTasks();
-              renderTasks();
-
-function enableDragAndDrop() {
-    $('.task-content').attr('draggable', true);
-
-    // Add event listeners for drag events
-    $('.task-content').on('dragstart', function(event) {
-        event.originalEvent.dataTransfer.setData('text/plain', event.target.id);
-        event.originalEvent.dataTransfer.effectAllowed = 'move';
-        $(this).addClass('dragging');
-    });
-
-    $('.task-content').on('dragend', function() {
-        $(this).removeClass('dragging');
-    });
-
-    // Handle dragover event on the drop target
-    $('.inprogress, .completed, .overdue').on('dragover', function(event) {
-        event.preventDefault();
-        event.originalEvent.dataTransfer.dropEffect = 'move';
-        $(this).addClass('dragover');
-    });
-
-    $('.inprogress, .completed, .overdue').on('dragleave', function() {
-        $(this).removeClass('dragover');
-    });
-
-    // Handle drop event on the drop target
-    $('.inprogress, .completed, .overdue').on('drop', function(event) {
-        event.preventDefault();
-        $(this).removeClass('dragover');
-
-        let data = event.originalEvent.dataTransfer.getData('text/plain');
-        let draggedElement = $('#' + data);
-        $(this).append(draggedElement);
-
-        // Update the task status
-        let newStatus = $(this).data('status');
-        console.log('New status:', newStatus);
-        updateTaskStatus(data.split('-')[1], newStatus); // Assuming ID is part of the task ID attribute
-    });
-}
-
-// Define the updateTaskStatus function
-function updateTaskStatus(taskId, newStatus) {
-    const accessToken = localStorage.getItem('access');
-    const csrftoken = getCookie('csrftoken');
-
-    $.ajax({
-        url: `/api/tasks/${taskId}/`,
-        method: 'PATCH',
+      $.ajax({
+        url: "/api/check-auth/",
+        type: "GET",
         headers: {
-            'Authorization': `Bearer ${accessToken}`,
-            'X-CSRFToken': csrftoken,
+          Authorization: `Bearer ${accessToken}`,
+          "X-CSRFToken": csrftoken,
         },
-        contentType: 'application/json',
-        data: JSON.stringify({ status: newStatus }),
-        success: function(response) {
-            console.log('Task status updated successfully:', response);
+        success: function (response) {
+          if (!response.is_authenticated) {
+            window.location.href = "/login";
+          }
+        },
+        error: function (xhr, status, error) {
+          // Optionally handle refresh token logic here if necessary
+          // For example, you can try to refresh the access token using the refresh token
+          window.location.href = "/login";
+        },
+      });
+    }
+
+    $(document).ready(function () {
+      //check if the device is mobile and inform the user to switch to pc if that's the case
+      
+      let tasks = []; // Empty array to hold tasks
+      checkAuth();
+      fetchTasks();
+      renderTasks();
+
+      function enableDragAndDrop() {
+        $(".task-content").attr("draggable", true);
+
+        // Add event listeners for drag events
+        $(".task-content").on("dragstart", function (event) {
+          event.originalEvent.dataTransfer.setData(
+            "text/plain",
+            event.target.id
+          );
+          event.originalEvent.dataTransfer.effectAllowed = "move";
+          $(this).addClass("dragging");
+        });
+
+        $(".task-content").on("dragend", function () {
+          $(this).removeClass("dragging");
+        });
+
+        // Handle dragover event on the drop target
+        $(".inprogress, .completed, .overdue").on("dragover", function (event) {
+          event.preventDefault();
+          event.originalEvent.dataTransfer.dropEffect = "move";
+          $(this).addClass("dragover");
+        });
+
+        $(".inprogress, .completed, .overdue").on("dragleave", function () {
+          $(this).removeClass("dragover");
+        });
+
+        // Handle drop event on the drop target
+        $(".inprogress, .completed, .overdue").on("drop", function (event) {
+          event.preventDefault();
+          $(this).removeClass("dragover");
+
+          let data = event.originalEvent.dataTransfer.getData("text/plain");
+          let draggedElement = $("#" + data);
+          $(this).append(draggedElement);
+
+          // Update the task status
+          let newStatus = $(this).data("status");
+          console.log("New status:", newStatus);
+          updateTaskStatus(data.split("-")[1], newStatus); // Assuming ID is part of the task ID attribute
+        });
+      }
+
+      // Define the updateTaskStatus function
+      function updateTaskStatus(taskId, newStatus) {
+        const accessToken = localStorage.getItem("access");
+        const csrftoken = getCookie("csrftoken");
+
+        $.ajax({
+          url: `/api/tasks/${taskId}/`,
+          method: "PATCH",
+          headers: {
+            Authorization: `Bearer ${accessToken}`,
+            "X-CSRFToken": csrftoken,
+          },
+          contentType: "application/json",
+          data: JSON.stringify({ status: newStatus }),
+          success: function (response) {
+            console.log("Task status updated successfully:", response);
             fetchTasks(); // Refresh tasks after updating the status
-            window.location.reload()
-        },
-        error: function(xhr) {
-            console.error('Error updating task status:', xhr.responseText);
-        }
-    });
-}
-  // Function to render tasks
-  function renderTasks() {
-    $('.task-content, .task-content-1').empty();
-    tasks.forEach(task => {
-      console.log(task);
-      let taskHtml2=`<div class="task-content mb-2" id="task-${task.id}">
+            window.location.reload();
+          },
+          error: function (xhr) {
+            console.error("Error updating task status:", xhr.responseText);
+          },
+        });
+      }
+      // Function to render tasks
+      function renderTasks() {
+        $(".task-content, .task-content-1").empty();
+        tasks.forEach((task) => {
+          console.log(task);
+          let taskHtml2 = `<div class="task-content mb-2" id="task-${task.id}">
               <div class="task-header flex justify-between items-center">
-                <span class="bg-[${getPriorityColor(task.priority)}] rounded-md px-3 py-1 text-sm"
+                <span class="bg-[${getPriorityColor(
+                  task.priority
+                )}] rounded-md px-3 py-1 text-sm"
                   >${task.priority}</span
                 >
                 <span
@@ -784,147 +869,155 @@ function updateTaskStatus(taskId, newStatus) {
                   </div>
                 </div>
               </div>
-            </div>`
-      if(task.status=='In Progress'){
-        $(`.inprogress`).append(taskHtml2);
-      }
-      else if(task.status=='Completed'){
-        $(`.completed`).append(taskHtml2);
-      }
-      else if(task.status=='Overdue'){
-        $(`.overdue`).append(taskHtml2);
-      }
-      else{
-        console.log("...")
-      }
-    });
+            </div>`;
+          if (task.status == "In Progress") {
+            $(`.inprogress`).append(taskHtml2);
+          } else if (task.status == "Completed") {
+            $(`.completed`).append(taskHtml2);
+          } else if (task.status == "Overdue") {
+            $(`.overdue`).append(taskHtml2);
+          } else {
+            console.log("...");
+          }
+        });
 
-    enableDragAndDrop(); // Enable drag and drop on the rendered tasks
-  }
-
-  // Function to get the priority color
-  function getPriorityColor(priority) {
-    switch(priority) {
-      case 'High': return '#FEDEDE';
-      case 'Medium': return '#E8E8E8';
-      case 'Low': return '#B4F2B4';
-      default: return '#E8E8E8';
-    }
-  }
-
-  // Fetch tasks from the API
-  function fetchTasks() {
-    const accessToken = localStorage.getItem('access');
-    const refreshToken = localStorage.getItem('refresh');
-    const csrftoken = getCookie('csrftoken');
-    $.ajax({
-      url: '/api/tasks/', // Replace with your API endpoint
-      method: 'GET',
-       headers: {
-                    'Authorization': `Bearer ${accessToken}`,
-                    'X-CSRFToken': csrftoken
-                },
-      dataType: 'json',
-      success: function(data) {
-        tasks = data.results; // Assuming the API returns an array of tasks
-        renderTasks(); // Render the tasks after fetching
-      },
-      error: function(xhr, status, error) {
-        console.error('Error fetching tasks:', error);
+        enableDragAndDrop(); // Enable drag and drop on the rendered tasks
       }
-    });
-  }
 
-    $('#addTaskBtn').click(function() {
-        showModal('Add Task');
-    });
+      // Function to get the priority color
+      function getPriorityColor(priority) {
+        switch (priority) {
+          case "High":
+            return "#FEDEDE";
+          case "Medium":
+            return "#E8E8E8";
+          case "Low":
+            return "#B4F2B4";
+          default:
+            return "#E8E8E8";
+        }
+      }
 
-    $('.close-modal').click(function() {
-      $('#taskModal').hide();
-    })
-    // Edit task button click
-    $(document).on('click', '.edit', function() {
-        const taskId = $(this).closest('.task-content').attr('id').split('-')[1];
+      // Fetch tasks from the API
+      function fetchTasks() {
+        const accessToken = localStorage.getItem("access");
+        const refreshToken = localStorage.getItem("refresh");
+        const csrftoken = getCookie("csrftoken");
+        $.ajax({
+          url: "/api/tasks/", // Replace with your API endpoint
+          method: "GET",
+          headers: {
+            Authorization: `Bearer ${accessToken}`,
+            "X-CSRFToken": csrftoken,
+          },
+          dataType: "json",
+          success: function (data) {
+            tasks = data.results; // Assuming the API returns an array of tasks
+            renderTasks(); // Render the tasks after fetching
+          },
+          error: function (xhr, status, error) {
+            console.error("Error fetching tasks:", error);
+          },
+        });
+      }
+
+      $("#addTaskBtn").click(function () {
+        showModal("Add Task");
+      });
+
+      $(".close-modal").click(function () {
+        $("#taskModal").hide();
+      });
+      // Edit task button click
+      $(document).on("click", ".edit", function () {
+        const taskId = $(this)
+          .closest(".task-content")
+          .attr("id")
+          .split("-")[1];
         console.log(taskId);
         $.ajax({
-            url: `/api/tasks/?id=${taskId}`,
-            method: 'GET',
-            success: function(task1) {
-              console.log(task1.results[0])
-                showModal('Edit Task', task1.results[0]);
-            },
-            error: function(xhr) {
-                console.error(xhr.responseText);
-            }
+          url: `/api/tasks/?id=${taskId}`,
+          method: "GET",
+          success: function (task1) {
+            console.log(task1.results[0]);
+            showModal("Edit Task", task1.results[0]);
+          },
+          error: function (xhr) {
+            console.error(xhr.responseText);
+          },
         });
-    });
- 
-     $(document).on('click', '.delete', function() {
-        const taskId = $(this).closest('.task-content').attr('id').split('-')[1];
-        if (confirm('Are you sure you want to delete this task?')) {
-            deleteTask(taskId);
-        }
-    });
-    //$('#taskForm').submit(handleFormSubmit);
-    $('#saveTask').click(handleFormSubmit);
-    function handleFormSubmit(event) {
-        event.preventDefault();
-        const accessToken = localStorage.getItem('access');
-        const refreshToken = localStorage.getItem('refresh');
-        const taskId = $('#taskModal input[name="id"]').val();
-        const url = taskId ? `/api/tasks/?id=${taskId}` : '/api/tasks/';
-        const method = taskId ? 'PUT' : 'POST';
-        const taskData = {
-            title: $('#taskModal input[name="title"]').val(),
-            priority: $('#taskModal select[name="priority"]').val(),
-            category: $('#taskModal input[name="type"]').val(),
-            status: "In Progress",
-            description: $('#taskModal textarea[name="description"]').val(),
-            due_date: new Date($('#taskModal input[name="due_date"]').val()).toTimeString().split(' ')[0],
-        };
-console.log(taskData);
-        $.ajax({
-            url: url,
-            method: method,
-            headers: {
-                'X-CSRFToken': getCookie('csrftoken'),
-                'Authorization': `Bearer ${accessToken}`,
-            },
-            contentType: 'application/json',
-            data: JSON.stringify(taskData),
-            success: function(response) {
-                $('#taskModal').hide();
-                // Refresh tasks
-                fetchTasks()
-                renderTasks()
-            },
-            error: function(xhr) {
-                console.error(xhr.responseText);
-            }
-        });
-    }
-    function deleteTask(taskId) {
-      const accessToken = localStorage.getItem('access');
-      const refreshToken = localStorage.getItem('refresh');
-      const csrftoken = getCookie('csrftoken');
-        $.ajax({
-            url: `/api/tasks/${taskId}/`,
-            method: 'DELETE',
-                 headers: {
-                    'Authorization': `Bearer ${accessToken}`,
-                    'X-CSRFToken': csrftoken
-                },
-            success: function(response) {
-                // Refresh tasks
-                fetchTasks()
-                renderTasks();
-            },
-            error: function(xhr) {
-                console.error(xhr.responseText);
-            }
-        });
-    }
+      });
 
-});
-    </script>
+      $(document).on("click", ".delete", function () {
+        const taskId = $(this)
+          .closest(".task-content")
+          .attr("id")
+          .split("-")[1];
+        if (confirm("Are you sure you want to delete this task?")) {
+          deleteTask(taskId);
+        }
+      });
+      //$('#taskForm').submit(handleFormSubmit);
+      $("#saveTask").click(handleFormSubmit);
+      function handleFormSubmit(event) {
+        event.preventDefault();
+        const accessToken = localStorage.getItem("access");
+        const refreshToken = localStorage.getItem("refresh");
+        const taskId = $('#taskModal input[name="id"]').val();
+        const url = taskId ? `/api/tasks/?id=${taskId}` : "/api/tasks/";
+        const method = taskId ? "PUT" : "POST";
+        const taskData = {
+          title: $('#taskModal input[name="title"]').val(),
+          priority: $('#taskModal select[name="priority"]').val(),
+          category: $('#taskModal input[name="type"]').val(),
+          status: "In Progress",
+          description: $('#taskModal textarea[name="description"]').val(),
+          due_date: new Date($('#taskModal input[name="due_date"]').val())
+            .toTimeString()
+            .split(" ")[0],
+        };
+        console.log(taskData);
+        $.ajax({
+          url: url,
+          method: method,
+          headers: {
+            "X-CSRFToken": getCookie("csrftoken"),
+            Authorization: `Bearer ${accessToken}`,
+          },
+          contentType: "application/json",
+          data: JSON.stringify(taskData),
+          success: function (response) {
+            $("#taskModal").hide();
+            // Refresh tasks
+            fetchTasks();
+            renderTasks();
+          },
+          error: function (xhr) {
+            console.error(xhr.responseText);
+          },
+        });
+      }
+      function deleteTask(taskId) {
+        const accessToken = localStorage.getItem("access");
+        const refreshToken = localStorage.getItem("refresh");
+        const csrftoken = getCookie("csrftoken");
+        $.ajax({
+          url: `/api/tasks/${taskId}/`,
+          method: "DELETE",
+          headers: {
+            Authorization: `Bearer ${accessToken}`,
+            "X-CSRFToken": csrftoken,
+          },
+          success: function (response) {
+            // Refresh tasks
+            fetchTasks();
+            renderTasks();
+          },
+          error: function (xhr) {
+            console.error(xhr.responseText);
+          },
+        });
+      }
+    });
+  </script>
 </html>
