@@ -61,9 +61,32 @@
         border: 2px dashed #ccc;
         background-color: #f9f9f9;
       }
+          #mobile-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-color: rgba(0, 0, 0, 0.8);
+            color: white;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            text-align: center;
+            z-index: 1000;
+            display: none;
+        }
+        #mobile-overlay h2 {
+            font-size: 24px;
+        }
     </style>
   </head>
   <body>
+  <div id="mobile-overlay">
+        <div>
+            <h2>For a better experience, please switch to a PC.</h2>
+        </div>
+    </div>
     <div class="container">
       <div class="sidebar flex flex-col bg-gray-200 justify-between">
         <div class="main_content">
@@ -735,7 +758,9 @@
 
     $(document).ready(function () {
       //check if the device is mobile and inform the user to switch to pc if that's the case
-      
+if (/Mobi|Android/i.test(navigator.userAgent) || window.innerWidth <= 768) {
+                $('#mobile-overlay').show();
+            }
       let tasks = []; // Empty array to hold tasks
       checkAuth();
       fetchTasks();
