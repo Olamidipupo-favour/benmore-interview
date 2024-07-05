@@ -3,9 +3,11 @@
 This project was written in django with the frontend written as templates incorporating tailwindcss and jquery.
 To setup,
 
-1. Start, then activate a venv.
+1. Clone repo, then activate a venv.
 
 ```
+git clone https://github.com/Olamidipupo-favour/benmore-interview
+cd benmore-interview
 python -m venv benmore
 "benmore/Scripts/activate"
 ```
@@ -27,7 +29,7 @@ python manage.py migrate
 4. Start the development server
 
 ```
-python migrate.py runserver
+python manage.py runserver
 ```
 
 The URL for deployed version of this interview is located at [tasky](https://benmore-interview.onrender.com/)
